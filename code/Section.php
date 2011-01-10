@@ -19,9 +19,15 @@ class Section extends Page {
 	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Content.Main',new DropdownField('SortOrder','Sort order of sub-pages',self::$sort_options),'Content');
-		$fields->addFieldToTab('Root.Content.Main',new NumericField('NumPages','Max pages to list (set to 0 to list all pages)'),'Content');
-		$fields->addFieldToTab('Root.Content.Main',new CheckboxField('ExcludeHiddenPages','Exclude pages hidden in the menu'),'Content');
+		$fields->addFieldToTab(
+			'Root.Content.Settings', new LiteralField(
+				$name = 'SlideshowSettingsHeader',
+	   			$content = '<br /><h3>'._t('EventsSection.SETTINGSHEADER', 'Section Settings').'</h3>'
+			)
+		);
+		$fields->addFieldToTab('Root.Content.Settings',new DropdownField('SortOrder','Sort order of sub-pages',self::$sort_options));
+		$fields->addFieldToTab('Root.Content.Settings',new NumericField('NumPages','Max sub-pages to list (set this to 0 to list all pages)'));
+		$fields->addFieldToTab('Root.Content.Settings',new CheckboxField('ExcludeHiddenPages','Exclude pages hidden in the menu'));
 		return $fields;
 	}
 

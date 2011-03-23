@@ -5,7 +5,9 @@ class Section extends Page {
 		'SortOrder' => 'Varchar',
 		'ExcludeHiddenPages' => 'Boolean'
 	);
-	public static $has_one = array();
+	public static $has_one = array(
+		'Image' => 'Image'
+	);
 	static $defaults = array(
 		'Pagination' => '0',
 		'SortOrder' => 'Sort',
@@ -19,15 +21,19 @@ class Section extends Page {
 	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab(
-			'Root.Content.Settings', new LiteralField(
-				$name = 'SlideshowSettingsHeader',
-	   			$content = '<br /><h3>'._t('EventsSection.SETTINGSHEADER', 'Section Settings').'</h3>'
+		$fields->addFieldsToTab('Root.Content.Settings', array(
+				new LiteralField('SectionSettingHeader', '<br /><h3>'._t('Section.SETTINGSHEADER', 'Section Settings').'</h3>'),
+				new DropdownField('SortOrder','Sort order of sub-pages',self::$sort_options),
+				new NumericField('NumPages','Max sub-pages to list (set this to 0 to list all pages)'),
+				new CheckboxField('ExcludeHiddenPages','Exclude pages hidden in the menu') 
 			)
 		);
-		$fields->addFieldToTab('Root.Content.Settings',new DropdownField('SortOrder','Sort order of sub-pages',self::$sort_options));
-		$fields->addFieldToTab('Root.Content.Settings',new NumericField('NumPages','Max sub-pages to list (set this to 0 to list all pages)'));
-		$fields->addFieldToTab('Root.Content.Settings',new CheckboxField('ExcludeHiddenPages','Exclude pages hidden in the menu'));
+		$fields->addFieldToTab('Root.Content.Main', 
+			new FileUploadField(
+				'Image',
+				_t('Section.IMAGE','Image')
+			)
+		);
 		return $fields;
 	}
 

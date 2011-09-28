@@ -1,42 +1,40 @@
 <?php
 class Section extends Page {
+	static $icon  = 'section/images/section';
+	static $num_pages_options = array(
+		0 => 'All',
+		5 => '5',
+		10 => '10',
+		15 => '15',
+		20 => '20',
+		50 => '50',
+		100 => '100'
+	);
 	public static $db = array(
 		'NumPages' => 'Int',
 		'SortOrder' => 'Varchar',
 		'ExcludeHiddenPages' => 'Boolean'
-	);
-	public static $has_one = array(
-		'Image' => 'Image'
 	);
 	static $defaults = array(
 		'Pagination' => '0',
 		'SortOrder' => 'Sort',
 		'ExcludeHiddenPages' => '0'
 	);
-	static $icon  = 'section/images/section';
 	public static $sort_options = array(
 		'Sort' => 'Menu sort order',
 		'Title' => 'Alfabetically by title'
 	);
-	
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldsToTab('Root.Content.Settings', array(
 				new LiteralField('SectionSettingHeader', '<br /><h3>'._t('Section.SETTINGSHEADER', 'Section Settings').'</h3>'),
 				new DropdownField('SortOrder','Sort order of sub-pages',self::$sort_options),
-				new NumericField('NumPages','Max sub-pages to list (set this to 0 to list all pages)'),
+				new DropdownField('NumPages','Number of sub-pages to list',self::$num_pages_options),
 				new CheckboxField('ExcludeHiddenPages','Exclude pages hidden in the menu') 
-			)
-		);
-		$fields->addFieldToTab('Root.Content.Main', 
-			new FileUploadField(
-				'Image',
-				_t('Section.IMAGE','Image')
 			)
 		);
 		return $fields;
 	}
-
 }
 class Section_Controller extends Page_Controller {
 	public function ContentList() {
@@ -52,4 +50,3 @@ class Section_Controller extends Page_Controller {
 		return $data;
 	}
 }
-?>

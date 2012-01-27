@@ -16,7 +16,6 @@ class Section extends Page {
 		'ExcludeHiddenPages' => 'Boolean'
 	);
 	static $defaults = array(
-		'Pagination' => '0',
 		'SortOrder' => 'Sort',
 		'ExcludeHiddenPages' => '0'
 	);
@@ -47,6 +46,11 @@ class Section_Controller extends Page_Controller {
 		$filter = 'ParentID = '. $this->ID;
 		if($this->ExcludeHiddenPages) $filter .= ' AND ShowInMenus = 1';
 		$data = DataObject::get('Page', $filter, $this->SortOrder,'',$limit);
+		
+		//hack avoiding DataObejctSet to set pageLength to 10 when it should be unlimited
+		if($data->pageLength == 0) {
+			$data->pageLength = -1;
+		}
 		return $data;
 	}
 }

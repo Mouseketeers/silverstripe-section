@@ -13,7 +13,8 @@ class Section extends Page {
 	public static $db = array(
 		'NumPages' => 'Int',
 		'SortOrder' => 'Varchar',
-		'ExcludeHiddenPages' => 'Boolean'
+		'ExcludeHiddenPages' => 'Boolean',
+		'IncludeSubsections' => 'Boolean'
 	);
 	static $defaults = array(
 		'SortOrder' => 'Sort',
@@ -29,7 +30,8 @@ class Section extends Page {
 				new LiteralField('SectionSettingHeader', '<br /><h3>'._t('Section.SETTINGSHEADER', 'Section Settings').'</h3>'),
 				new DropdownField('SortOrder','Sort order of sub-pages',self::$sort_options),
 				new DropdownField('NumPages','Number of sub-pages to list',self::$num_pages_options),
-				new CheckboxField('ExcludeHiddenPages','Exclude pages hidden in the menu') 
+				new CheckboxField('ExcludeHiddenPages','Exclude pages hidden in the menu'),
+				new CheckboxField('IncludeSubsections','Include pages in subsections')
 			)
 		);
 		return $fields;
@@ -37,13 +39,21 @@ class Section extends Page {
 }
 class Section_Controller extends Page_Controller {
 	public function ContentList() {
-		$limit = '';
 		if($this->NumPages) {
 			if(!isset($_GET['start']) || !is_numeric($_GET['start']) || (int)$_GET['start'] < 1) $_GET['start'] = 0;
 			$limit_start = (int)$_GET['start'];
 			$limit = $limit_start.','.$this->NumPages;
 		}
-		$filter = 'ParentID = '. $this->ID;
+		else {
+			$limit = '';
+		}
+		if($this->IncludeEventsInSubsections) {
+			$decendent_ids = $this->getDescendantIDList();
+			$filter = '"Page"."ID" IN ('.implode(',',$decendent_ids).') ';
+		}
+		else {
+			$filter = 'ParentID = '. $this->ID;			
+		}
 		if($this->ExcludeHiddenPages) $filter .= ' AND ShowInMenus = 1';
 		$data = DataObject::get('Page', $filter, $this->SortOrder,'',$limit);
 		

@@ -1,9 +1,16 @@
 <?php
 class Section extends Page {
 	static $icon  = 'section/images/section';
-	static $num_pages_options = array(
+ 	static $num_pages_options = array(
 		0 => 'All',
+		2 => '2',
+		3 => '3',
+		4 => '4',
 		5 => '5',
+		6 => '6',
+		7 => '7',
+		8 => '8',
+		9 => '9',
 		10 => '10',
 		15 => '15',
 		20 => '20',
@@ -58,7 +65,7 @@ class Section_Controller extends Page_Controller {
 		$data = DataObject::get('Page', $filter, $this->SortOrder,'',$limit);
 		
 		//hack avoiding DataObejctSet to set pageLength to 10 when it should be unlimited
-		if($data->pageLength == 0) {
+		if($data && $data->pageLength == 0) {
 			$data->pageLength = -1;
 		}
 		return $data;

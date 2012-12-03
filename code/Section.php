@@ -60,4 +60,7 @@ class Section_Controller extends Page_Controller {
 		}
 		return $data;
 	}
+	public function IsFirstPage() {
+		return ($this->request->getVar('start') == 0);
+	}
 }

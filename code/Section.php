@@ -57,7 +57,7 @@ class Section_Controller extends Page_Controller {
 		else {
 			$limit = '';
 		}
-		if($this->IncludeEventsInSubsections) {
+		if($this->IncludeSubsections) {
 			$decendent_ids = $this->getDescendantIDList();
 			$filter = '"Page"."ID" IN ('.implode(',',$decendent_ids).') ';
 		}

@@ -27,7 +27,10 @@ class Section extends Page {
 		'ExcludeHiddenPages' => '0'
 	);
 	public static $sort_options = array(
-		'Sort' => 'Menu sort order',
+		'Sort' => 'Sort order',
+		'Sort DESC' => 'Reverse sort order',
+		'Created' => 'By creation date',
+		'Created DESC' => 'By reverse creation date',
 		'Title' => 'Alfabetically by title'
 	);
 	public function getCMSFields() {
